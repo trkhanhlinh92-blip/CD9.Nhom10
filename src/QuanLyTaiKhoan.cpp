@@ -65,3 +65,12 @@ void QuanLyTaiKhoan::boSung(int vitri) {
     cout << "Nhap thong tin tai khoan can bo sung:\n";
     tkm.nhap();
 #include "../include/QuanLyTaiKhoan.h"
+void QuanLyTaiKhoan::xoaTaiKhoan(int k) {
+    if (n == 0 || k < 0 || k >= n) {
+        cout << "=> LOI: Vi tri k khong hop le!\n"; return;
+    }
+    for (int i = k; i < n - 1; i++) {
+        ds[i] = ds[i + 1]; 
+    }
+    n--; 
+}
