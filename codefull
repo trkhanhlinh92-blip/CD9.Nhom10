@@ -1,0 +1,445 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+#include <algorithm>
+
+using namespace std;
+
+// ============================================================================
+// 1. KHAI BAO LOP TAI KHOAN (Gop tu include/TaiKhoan.h)
+// ============================================================================
+class TaiKhoan {
+private:
+    string stk;
+    string ten;
+    string loaitk;
+    double sodu;
+    double laisuat;
+
+public:
+    TaiKhoan();
+    TaiKhoan(string s, string t, string l, double sd, double ls);
+
+    // Getters & Setters
+    string getSTK() const;
+    string getTen() const;
+    string getLoaiTK() const;
+    double getSodu() const;
+    double getLaisuat() const;
+
+    void setSodu(double sd);
+
+    // Cac phuong thuc nghiep vu
+    void nhap();
+    void xuat() const;
+    void naptien(double tien);
+    void ruttien(double tien);
+    double tinhlai() const;
+};
+
+// ============================================================================
+// 2. CAI DAT PHUONG THUC LOP TAI KHOAN (Gop tu src/TaiKhoan.cpp)
+// ============================================================================
+TaiKhoan::TaiKhoan() {
+    stk = ten = loaitk = "";
+    sodu = laisuat = 0.0;
+}
+
+TaiKhoan::TaiKhoan(string s, string t, string l, double sd, double ls)
+    : stk(s), ten(t), loaitk(l), sodu(sd), laisuat(ls) {}
+
+string TaiKhoan::getSTK() const { return stk; }
+string TaiKhoan::getTen() const { return ten; }
+string TaiKhoan::getLoaiTK() const { return loaitk; }
+double TaiKhoan::getSodu() const { return sodu; }
+double TaiKhoan::getLaisuat() const { return laisuat; }
+
+void TaiKhoan::setSodu(double sd) { sodu = sd; }
+
+void TaiKhoan::nhap() {
+    cout << "  - Nhap so tai khoan: "; cin >> stk;
+    cin.ignore();
+    cout << "  - Nhap ho ten chu tk: "; getline(cin, ten);
+    cout << "  - Nhap loai tai khoan: "; getline(cin, loaitk);
+    do {
+        cout << "  - Nhap so du hien tai (>= 0): "; cin >> sodu;
+    } while (sodu < 0);
+    do {
+        cout << "  - Nhap lai suat (%/nam): "; cin >> laisuat;
+    } while (laisuat < 0);
+}
+
+void TaiKhoan::xuat() const {
+    cout << left << setw(12) << stk 
+         << setw(22) << ten 
+         << setw(15) << loaitk 
+         << setw(15) << fixed << setprecision(2) << sodu 
+         << setw(10) << fixed << setprecision(2) << laisuat << "%\n";
+}
+
+void TaiKhoan::naptien(double tien) {
+    if (tien > 0) {
+        sodu += tien;
+        cout << "=> Nap tien thanh cong. So du moi: " << fixed << setprecision(2) << sodu << " VND\n";
+    } else {
+        cout << "=> LOI: So tien nap phai > 0!\n";
+    }
+}
+
+void TaiKhoan::ruttien(double tien) {
+    if (tien > 0 && tien <= sodu) {
+        sodu -= tien;
+        cout << "=> Rut tien thanh cong. So du moi: " << fixed << setprecision(2) << sodu << " VND\n";
+    } else {
+        cout << "=> LOI: So du khong du hoac so tien rut khong hop le!\n";
+    }
+}
+
+double TaiKhoan::tinhlai() const {
+    return sodu * (laisuat / 100.0);
+}
+
+// ============================================================================
+// 3. KHAI BAO LOP QUAN LY TAI KHOAN (Gop tu include/QuanLyTaiKhoan.h)
+// ============================================================================
+class QuanLyTaiKhoan {
+private:
+    TaiKhoan ds[200];
+    int n;
+
+public:
+    QuanLyTaiKhoan();
+
+    int getSoLuong() const;
+
+    // Phan he I/O & Tim kiem (Le Kim Hue)
+    void nhapDanhSach();
+    void xuatDanhSach() const;
+    int timKiemBySTK(string stk) const;
+    void timKiemTheoTen() const;
+
+    // Phan he Thuat toan & Nghiep vu (Doan Quang Huy)
+    void sapXepGiamDanSoDu();
+    void themTaiKhoan(int k);
+    void xoaTaiKhoan(int k);
+    void thucHienGiaoDich();
+    void inBangTinhLai() const;
+};
+
+// ============================================================================
+// 4. CAI DAT PHUONG THUC LOP QUAN LY TAI KHOAN (Gop tu src/QuanLyTaiKhoan.cpp)
+// ============================================================================
+QuanLyTaiKhoan::QuanLyTaiKhoan() {
+    n = 0;
+}
+
+int QuanLyTaiKhoan::getSoLuong() const {
+    return n;
+}
+
+// Nhap danh sach tai khoan
+void QuanLyTaiKhoan::nhapDanhSach() {
+    do {
+        cout << "Nhap so luong tai khoan (0 < n < 200): ";
+        cin >> n;
+    } while (n <= 0 || n >= 200);
+
+    for (int i = 0; i < n; i++) {
+        cout << "\n--- Nhap thong tin tai khoan thu " << i + 1 << " ---\n";
+        while (true) {
+            ds[i].nhap();
+            bool trung = false;
+            for (int j = 0; j < i; j++) {
+                if (ds[j].getSTK() == ds[i].getSTK()) {
+                    trung = true;
+                    break;
+                }
+            }
+            if (trung) {
+                cout << "=> LOI: So tai khoan nay da ton tai! Vui long nhap lai.\n";
+            } else {
+                break;
+            }
+        }
+    }
+    cout << "\n=> Da nhap thanh cong danh sach " << n << " tai khoan!\n";
+}
+
+// Xuat danh sach tai khoan
+void QuanLyTaiKhoan::xuatDanhSach() const {
+    if (n == 0) {
+        cout << "=> Danh sach tai khoan dang trong!\n";
+        return;
+    }
+    cout << "\n================================ DANH SACH TAI KHOAN NGAN HANG ================================\n";
+    cout << left << setw(12) << "STK" 
+         << setw(22) << "Ho va Ten" 
+         << setw(15) << "Loai TK" 
+         << setw(15) << "So Du (VND)" 
+         << setw(10) << "Lai Suat" << endl;
+    cout << "------------------------------------------------------------------------------------------------\n";
+    for (int i = 0; i < n; i++) {
+        ds[i].xuat();
+    }
+    cout << "================================================================================================\n";
+}
+
+// Tim kiem theo So tai khoan
+int QuanLyTaiKhoan::timKiemBySTK(string stk) const {
+    for (int i = 0; i < n; i++) {
+        if (ds[i].getSTK() == stk) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// Tim kiem theo Ten chu tai khoan
+void QuanLyTaiKhoan::timKiemTheoTen() const {
+    if (n == 0) {
+        cout << "=> Danh sach trong!\n";
+        return;
+    }
+    cin.ignore();
+    string tenCanTim;
+    cout << "Nhap ho ten (hoac tu khoa) can tim: ";
+    getline(cin, tenCanTim);
+
+    bool timThay = false;
+    cout << "\n--- KET QUA TIM KIEM THEO TEN ---\n";
+    for (int i = 0; i < n; i++) {
+        if (ds[i].getTen().find(tenCanTim) != string::npos) {
+            ds[i].xuat();
+            timThay = true;
+        }
+    }
+    if (!timThay) {
+        cout << "=> Khong tim thay tai khoan phu hop voi tu khoa!\n";
+    }
+}
+
+// Sap xep danh sach giam dan theo So du
+void QuanLyTaiKhoan::sapXepGiamDanSoDu() {
+    if (n == 0) {
+        cout << "=> Danh sach trong, khong the sap xep!\n";
+        return;
+    }
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (ds[i].getSodu() < ds[j].getSodu()) {
+                swap(ds[i], ds[j]);
+            }
+        }
+    }
+    cout << "=> Da sap xep danh sach giam dan theo so du thanh cong!\n";
+}
+
+// Them tai khoan tai vi tri k
+void QuanLyTaiKhoan::themTaiKhoan(int k) {
+    if (n >= 200) {
+        cout << "=> LOI: Danh sach da day (toi da 200 tai khoan)!\n";
+        return;
+    }
+    if (k < 0 || k > n) {
+        cout << "=> LOI: Vi tri k = " << k << " khong hop le! (Cho phep tu 0 den " << n << ")\n";
+        return;
+    }
+
+    TaiKhoan tkMoi;
+    cout << "\n--- Nhap thong tin tai khoan can them ---\n";
+    while (true) {
+        tkMoi.nhap();
+        bool trung = false;
+        for (int i = 0; i < n; i++) {
+            if (ds[i].getSTK() == tkMoi.getSTK()) {
+                trung = true;
+                break;
+            }
+        }
+        if (trung) {
+            cout << "=> LOI: So tai khoan da ton tai! Vui long nhap lai.\n";
+        } else {
+            break;
+        }
+    }
+
+    for (int i = n; i > k; i--) {
+        ds[i] = ds[i - 1];
+    }
+    ds[k] = tkMoi;
+    n++;
+    cout << "=> Da them tai khoan thanh cong vao vi tri " << k << "!\n";
+}
+
+// Xoa tai khoan tai vi tri k
+void QuanLyTaiKhoan::xoaTaiKhoan(int k) {
+    if (n == 0) {
+        cout << "=> Danh sach trong, khong the xoa!\n";
+        return;
+    }
+    if (k < 0 || k >= n) {
+        cout << "=> LOI: Vi tri k = " << k << " khong hop le! (Cho phep tu 0 den " << n - 1 << ")\n";
+        return;
+    }
+
+    for (int i = k; i < n - 1; i++) {
+        ds[i] = ds[i + 1];
+    }
+    n--;
+    cout << "=> Da xoa tai khoan tai vi tri " << k << " thanh cong!\n";
+}
+
+// Thuc hien giao dich Nap / Rut tien
+void QuanLyTaiKhoan::thucHienGiaoDich() {
+    if (n == 0) {
+        cout << "=> Danh sach trong!\n";
+        return;
+    }
+    string stk;
+    cout << "Nhap so tai khoan can giao dich: ";
+    cin >> stk;
+
+    int pos = timKiemBySTK(stk);
+    if (pos == -1) {
+        cout << "=> Khong tim thay tai khoan co STK: " << stk << endl;
+        return;
+    }
+
+    cout << "\nTai khoan: " << ds[pos].getTen() << " - So du hien tai: " << fixed << setprecision(2) << ds[pos].getSodu() << " VND\n";
+    cout << "1. Nap tien\n2. Rut tien\nChon thao tac (1-2): ";
+    int luaChon;
+    cin >> luaChon;
+
+    if (luaChon == 1) {
+        double tien;
+        cout << "Nhap so tien muon nap: ";
+        cin >> tien;
+        ds[pos].naptien(tien);
+    } else if (luaChon == 2) {
+        double tien;
+        cout << "Nhap so tien muon rut: ";
+        cin >> tien;
+        ds[pos].ruttien(tien);
+    } else {
+        cout << "=> Lua chon khong hop le!\n";
+    }
+}
+
+// In bang tinh tien lai hang nam
+void QuanLyTaiKhoan::inBangTinhLai() const {
+    if (n == 0) {
+        cout << "=> Danh sach trong!\n";
+        return;
+    }
+    cout << "\n============================== BANG TINH TIEN LAI DU KIEN (1 NAM) ==============================\n";
+    cout << left << setw(12) << "STK" 
+         << setw(22) << "Ho va Ten" 
+         << setw(15) << "So Du (VND)" 
+         << setw(12) << "Lai Suat" 
+         << setw(18) << "Tien Lai/Nam" << endl;
+    cout << "------------------------------------------------------------------------------------------------\n";
+    for (int i = 0; i < n; i++) {
+        cout << left << setw(12) << ds[i].getSTK()
+             << setw(22) << ds[i].getTen()
+             << setw(15) << fixed << setprecision(2) << ds[i].getSodu()
+             << setw(10) << fixed << setprecision(2) << ds[i].getLaisuat() << "%"
+             << setw(18) << fixed << setprecision(2) << ds[i].tinhlai() << endl;
+    }
+    cout << "================================================================================================\n";
+}
+
+// ============================================================================
+// 5. GIAO DIEN MENU VA HAM MAIN (Gop tu src/main.cpp)
+// ============================================================================
+void hienThiMenu() {
+    cout << "\n========================================================\n";
+    cout << "      CHUYEN DE 9: QUAN LY TAI KHOAN NGAN HANG (OOP)     \n";
+    cout << "========================================================\n";
+    cout << " 1. Nhap danh sach tai khoan moi                       \n";
+    cout << " 2. In danh sach tai khoan                             \n";
+    cout << " 3. Tim kiem tai khoan theo So Tai Khoan (STK)         \n";
+    cout << " 4. Tim kiem tai khoan theo Ten chu tai khoan          \n";
+    cout << " 5. Sap xep danh sach giam dan theo So Du              \n";
+    cout << " 6. Them 1 tai khoan moi vao vi tri k                  \n";
+    cout << " 7. Xoa 1 tai khoan tai vi tri k                       \n";
+    cout << " 8. Thuc hien giao dich (Nap / Rut tien)               \n";
+    cout << " 9. In bang tinh tien lai du kien hang nam             \n";
+    cout << " 0. Thoat chuong trinh                                 \n";
+    cout << "========================================================\n";
+    cout << "Nhap lua chon cua ban (0-9): ";
+}
+
+int main() {
+    QuanLyTaiKhoan ql;
+    int chon;
+
+    do {
+        hienThiMenu();
+        cin >> chon;
+
+        switch (chon) {
+        case 1:
+            ql.nhapDanhSach();
+            break;
+        case 2:
+            ql.xuatDanhSach();
+            break;
+        case 3: {
+            if (ql.getSoLuong() == 0) {
+                cout << "=> Danh sach trong!\n";
+                break;
+            }
+            string stk;
+            cout << "Nhap STK can tim: ";
+            cin >> stk;
+            int pos = ql.timKiemBySTK(stk);
+            if (pos != -1) {
+                cout << "=> Tim thay tai khoan tai vi tri index [" << pos << "]:\n";
+            } else {
+                cout << "=> Khong tim thay tai khoan co STK: " << stk << endl;
+            }
+            break;
+        }
+        case 4:
+            ql.timKiemTheoTen();
+            break;
+        case 5:
+            ql.sapXepGiamDanSoDu();
+            ql.xuatDanhSach();
+            break;
+        case 6: {
+            int k;
+            cout << "Nhap vi tri k can them (0 <= k <= " << ql.getSoLuong() << "): ";
+            cin >> k;
+            ql.themTaiKhoan(k);
+            break;
+        }
+        case 7: {
+            if (ql.getSoLuong() == 0) {
+                cout << "=> Danh sach trong!\n";
+                break;
+            }
+            int k;
+            cout << "Nhap vi tri k can xoa (0 <= k < " << ql.getSoLuong() << "): ";
+            cin >> k;
+            ql.xoaTaiKhoan(k);
+            break;
+        }
+        case 8:
+            ql.thucHienGiaoDich();
+            break;
+        case 9:
+            ql.inBangTinhLai();
+            break;
+        case 0:
+            cout << "\nCam on ban da su dung chuong trinh! Tam biet.\n";
+            break;
+        default:
+            cout << "\n=> Lua chon khong hop le! Vui long nhap tu 0 den 9.\n";
+            break;
+        }
+
+    } while (chon != 0);
+
+    return 0;
+}
