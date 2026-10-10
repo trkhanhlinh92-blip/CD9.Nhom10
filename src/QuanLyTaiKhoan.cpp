@@ -34,37 +34,34 @@ void QuanLyTaiKhoan::xuatDanhSach() const {
     cout << "------------------------------------------------------------------------------------\n";
     for (int i = 0; i < n; i++) {
         cout << left << setw(5) << i + 1;
-        ds[i].xuat();
-    }
-    cout << "================================================================--------------------\n";
-}
-
-int QuanLyTaiKhoan::timKiem(string tk) const {
-    for (int i = 0; i < n; i++) {
-        if (ds[i].getSTK() == tk) return i;
-    }
-    return -1;
-}
-
-void QuanLyTaiKhoan::thaoTacNapRut(int loai) {
-    if (n == 0) {
-        cout << "Danh sach tai khoan dang trong!\n";
+void QuanLyTaiKhoan::giamDan() {
+    if (n <= 0) {
+        cout << "Danh sach dang trong!\n";
         return;
     }
-    string stk;
-    cout << "Nhap so tai khoan can thao tac: "; cin >> stk;
-    int idx = timKiem(stk);
-    if (idx == -1) {
-        cout << "Khong tim thay tai khoan co STK: " << stk << endl;
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (ds[i].getSodu() < ds[j].getSodu()) {
+                TaiKhoan temp = ds[i];
+                ds[i] = ds[j];
+                ds[j] = temp;
+            }
+        }
+    }
+    cout << "=> Da sap xep danh sach theo so du giam dan thanh cong.\n";
+}
+
+void QuanLyTaiKhoan::boSung(int vitri) {
+    if (n >= 200) {
+        cout << "Danh sach da day (toi da 200), khong the bo sung!\n";
         return;
     }
-    if (loai == 1) {
-        double tien; cout << "Nhap so tien nap: "; cin >> tien;
-        ds[idx].naptien(tien);
-    } else if (loai == 2) {
-        double tien; cout << "Nhap so tien rut: "; cin >> tien;
-        ds[idx].ruttien(tien);
-    } else if (loai == 3) {
-        cout << "Tien lai du kien nhan duoc: " << fixed << setprecision(2) << ds[idx].tinhlai() << endl;
+    if (vitri < 0 || vitri > n) {
+        cout << "Vi tri bo sung khong hop le!\n";
+        return;
     }
-}
+
+    TaiKhoan tkm;
+    cout << "Nhap thong tin tai khoan can bo sung:\n";
+    tkm.nhap();
+#include "../include/QuanLyTaiKhoan.h"
