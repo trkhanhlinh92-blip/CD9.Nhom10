@@ -1,77 +1,98 @@
+#include <iostream>
+#include <string>
 #include "../include/QuanLyTaiKhoan.h"
+
+using namespace std;
+
+void hienThiMenu() {
+    cout << "\n========================================================\n";
+    cout << "      CHUYEN DE 9: QUAN LY TAI KHOAN NGAN HANG (OOP)     \n";
+    cout << "========================================================\n";
+    cout << " 1. Nhap danh sach tai khoan moi                       \n";
+    cout << " 2. In danh sach tai khoan                             \n";
+    cout << " 3. Tim kiem tai khoan theo So Tai Khoan (STK)         \n";
+    cout << " 4. Tim kiem tai khoan theo Ten chu tai khoan          \n";
+    cout << " 5. Sap xep danh sach giam dan theo So Du              \n";
+    cout << " 6. Them 1 tai khoan moi vao vi tri k                  \n";
+    cout << " 7. Xoa 1 tai khoan tai vi tri k                       \n";
+    cout << " 8. Thuc hien giao dich (Nap / Rut tien)               \n";
+    cout << " 9. In bang tinh tien lai du kien hang nam             \n";
+    cout << " 0. Thoat chuong trinh                                 \n";
+    cout << "========================================================\n";
+    cout << "Nhap lua chon cua ban (0-9): ";
+}
 
 int main() {
     QuanLyTaiKhoan ql;
-    int luachon;
+    int chon;
 
     do {
-        cout << "\n================ MENU QUAN LY TAI KHOAN ================\n";
-        cout << "1. Nhap danh sach tai khoan\n";
-        cout << "2. In danh sach tai khoan\n";
-        cout << "3. Sap xep danh sach theo so du giam dan\n";
-        cout << "4. Tim kiem tai khoan theo STK\n";
-        cout << "5. Bo sung 1 tai khoan vao vi tri k\n";
-        cout << "6. Xoa 1 tai khoan o vi tri k\n";
-        cout << "7. Nap tien vao tai khoan\n";
-        cout << "8. Rut tien tu tai khoan\n";
-        cout << "9. Tinh tien lai du kien\n";
-        cout << "0. Thoat chuong trinh\n";
-        cout << "========================================================\n";
-        cout << "Nhap lua chon cua ban: ";
-        cin >> luachon;
+        hienThiMenu();
+        cin >> chon;
 
-        switch (luachon) {
-            case 1:
-                ql.nhapDanhSach();
-                break;
-            case 2:
-                ql.xuatDanhSach();
-                break;
-            case 3:
-                ql.giamDan();
-                break;
-            case 4: {
-                string tktim;
-                cout << "Nhap so tai khoan can tim: ";
-                cin >> tktim;
-                int vt = ql.timKiem(tktim);
-                if (vt != -1) {
-                    cout << "=> Tim thay tai khoan tai vi tri " << vt + 1 << endl;
-                } else {
-                    cout << "=> Khong tim thay tai khoan co STK: " << tktim << endl;
-                }
+        switch (chon) {
+        case 1:
+            ql.nhapDanhSach();
+            break;
+        case 2:
+            ql.xuatDanhSach();
+            break;
+        case 3: {
+            if (ql.getSoLuong() == 0) {
+                cout << "=> Danh sach trong!\n";
                 break;
             }
-            case 5: {
-                int vitrithem;
-                cout << "Nhap vi tri can them (tu 0 đen n): ";
-                cin >> vitrithem;
-                ql.boSung(vitrithem);
-                break;
+            string stk;
+            cout << "Nhap STK can tim: ";
+            cin >> stk;
+            int pos = ql.timKiemBySTK(stk);
+            if (pos != -1) {
+                cout << "=> Tim thay tai khoan tai vi tri index [" << pos << "]:\n";
+            } else {
+                cout << "=> Khong tim thay tai khoan co STK: " << stk << endl;
             }
-            case 6: {
-                int vitrixoa;
-                cout << "Nhap vi tri can xoa (tu 0 đen n-1): ";
-                cin >> vitrixoa;
-                ql.xoa(vitrixoa);
-                break;
-            }
-            case 7:
-                ql.thaoTacNapRut(1);
-                break;
-            case 8:
-                ql.thaoTacNapRut(2);
-                break;
-            case 9:
-                ql.thaoTacNapRut(3);
-                break;
-            case 0:
-                cout << "Da thoat chuong trinh. Tam biet!\n";
-                break;
-            default:
-                cout << "Lua chon khong hop le! Vui long nhap lai.\n";
+            break;
         }
-    } while (luachon != 0);
+        case 4:
+            ql.timKiemTheoTen();
+            break;
+        case 5:
+            ql.sapXepGiamDanSoDu();
+            ql.xuatDanhSach();
+            break;
+        case 6: {
+            int k;
+            cout << "Nhap vi tri k can them (0 <= k <= " << ql.getSoLuong() << "): ";
+            cin >> k;
+            ql.themTaiKhoan(k);
+            break;
+        }
+        case 7: {
+            if (ql.getSoLuong() == 0) {
+                cout << "=> Danh sach trong!\n";
+                break;
+            }
+            int k;
+            cout << "Nhap vi tri k can xoa (0 <= k < " << ql.getSoLuong() << "): ";
+            cin >> k;
+            ql.xoaTaiKhoan(k);
+            break;
+        }
+        case 8:
+            ql.thucHienGiaoDich();
+            break;
+        case 9:
+            ql.inBangTinhLai();
+            break;
+        case 0:
+            cout << "\nCam on ban da su dung chuong trinh! Tam biet.\n";
+            break;
+        default:
+            cout << "\n=> Lua chon khong hop le! Vui long nhap tu 0 den 9.\n";
+            break;
+        }
+
+    } while (chon != 0);
 
     return 0;
 }
