@@ -1,5 +1,4 @@
 #include "../include/TaiKhoan.h"
-#include <iomanip>
 
 TaiKhoan::TaiKhoan() {
     stk = ten = loaitk = "";
@@ -41,18 +40,18 @@ void TaiKhoan::xuat() const {
 void TaiKhoan::naptien(double tien) {
     if (tien > 0) {
         sodu += tien;
-        cout << "=> Nap tien thanh cong. So du moi: " << fixed << setprecision(2) << sodu << endl;
+        cout << "=> Nap tien thanh cong. So du moi: " << fixed << setprecision(2) << sodu << " VND\n";
     } else {
-        cout << "=> So tien nap khong hop le!\n";
+        cout << "=> LOI: So tien nap phai > 0!\n";
     }
 }
 
 void TaiKhoan::ruttien(double tien) {
     if (tien > 0 && tien <= sodu) {
         sodu -= tien;
-        cout << "=> Rut tien thanh cong. So du moi: " << fixed << setprecision(2) << sodu << endl;
+        cout << "=> Rut tien thanh cong. So du moi: " << fixed << setprecision(2) << sodu << " VND\n";
     } else {
-        cout << "=> So du khong du hoac so tien rut khong hop le!\n";
+        cout << "=> LOI: So du khong du hoac so tien rut khong hop le!\n";
     }
 }
 
