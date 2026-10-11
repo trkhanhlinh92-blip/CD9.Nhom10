@@ -153,3 +153,58 @@ void QuanLyTaiKhoan::xoaTaiKhoan(int k) {
     n--;
     cout << "=> Da xoa tai khoan tai vi tri " << k << " thanh cong!\n";
 }
+void QuanLyTaiKhoan::thucHienGiaoDich() {
+    if (n == 0) {
+        cout << "=> Danh sach trong!\n";
+        return;
+    }
+    string stk;
+    cout << "Nhap so tai khoan can giao dich: ";
+    cin >> stk;
+
+    int pos = timKiemBySTK(stk);
+    if (pos == -1) {
+        cout << "=> Khong tim thay tai khoan co STK: " << stk << endl;
+        return;
+    }
+
+    cout << "\nTai khoan: " << ds[pos].getTen() << " - So du hien tai: " << fixed << setprecision(2) << ds[pos].getSodu() << " VND\n";
+    cout << "1. Nap tien\n2. Rut tien\nChon thao tac (1-2): ";
+    int luaChon;
+    cin >> luaChon;
+
+    if (luaChon == 1) {
+        double tien;
+        cout << "Nhap so tien muon nap: ";
+        cin >> tien;
+        ds[pos].naptien(tien);
+    } else if (luaChon == 2) {
+        double tien;
+        cout << "Nhap so tien muon rut: ";
+        cin >> tien;
+        ds[pos].ruttien(tien);
+    } else {
+        cout << "=> Lua chon khong hop le!\n";
+    }
+}
+void QuanLyTaiKhoan::inBangTinhLai() const {
+    if (n == 0) {
+        cout << "=> Danh sach trong!\n";
+        return;
+    }
+    cout << "\n============================== BANG TINH TIEN LAI DU KIEN (1 NAM) ==============================\n";
+    cout << left << setw(12) << "STK" 
+         << setw(22) << "Ho va Ten" 
+         << setw(15) << "So Du (VND)" 
+         << setw(12) << "Lai Suat" 
+         << setw(18) << "Tien Lai/Nam" << endl;
+    cout << "------------------------------------------------------------------------------------------------\n";
+    for (int i = 0; i < n; i++) {
+        cout << left << setw(12) << ds[i].getSTK()
+             << setw(22) << ds[i].getTen()
+             << setw(15) << fixed << setprecision(2) << ds[i].getSodu()
+             << setw(10) << fixed << setprecision(2) << ds[i].getLaisuat() << "%"
+             << setw(18) << fixed << setprecision(2) << ds[i].tinhlai() << endl;
+    }
+    cout << "================================================================================================\n";
+}
