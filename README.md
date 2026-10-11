@@ -15,7 +15,7 @@ CHỦ ĐỀ 9: QUẢN LÝ DANH SÁCH TÀI KHOẢN NGÂN HÀNG
  CẤU TRÚC THƯ MỤC DỰ ÁN
 
 ```text
-BankAccountManagement/
+QUẢN LÝ NGÂN HÀNG/
 ├── include/
 │   ├── TaiKhoan.h           # Khai báo Lớp cơ sở TaiKhoan (Khánh Linh)
 │   └── QuanLyTaiKhoan.h     # Khai báo Lớp Quản lý (Lê Kim Huế)
@@ -23,4 +23,5 @@ BankAccountManagement/
 │   ├── TaiKhoan.cpp         # Cài đặt chi tiết Lớp TaiKhoan (Khánh Linh)
 │   ├── QuanLyTaiKhoan.cpp   # Cài đặt các chức năng nghiệp vụ và thuật toán (Huế , Huy)
 │   └── main.cpp             # Giao diện Menu và Hàm main điều khiển (Thu Hương)
-└── README.md                # Tài liệu giới thiệu dự án
+├── README.md                # Tài liệu giới thiệu dự án
+└──CODEfull                  # Code sau khi tổng hợp 
