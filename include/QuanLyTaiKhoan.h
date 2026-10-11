@@ -10,6 +10,7 @@ private:
 
 public:
     QuanLyTaiKhoan();
+
     int getSoLuong() const;
 
     // Phan he I/O & Tim kiem 
