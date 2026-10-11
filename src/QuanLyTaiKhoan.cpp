@@ -88,3 +88,68 @@ void QuanLyTaiKhoan::timKiemTheoTen() const {
         cout << "=> Khong tim thay tai khoan phu hop voi tu khoa!\n";
     }
 }
+void QuanLyTaiKhoan::sapXepGiamDanSoDu() {
+    if (n == 0) {
+        cout << "=> Danh sach trong, khong the sap xep!\n";
+        return;
+    }
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = i + 1; j < n; j++) {
+            if (ds[i].getSodu() < ds[j].getSodu()) {
+                swap(ds[i], ds[j]);
+            }
+        }
+    }
+    cout << "=> Da sap xep danh sach giam dan theo so du thanh cong!\n";
+}
+void QuanLyTaiKhoan::themTaiKhoan(int k) {
+    if (n >= 200) {
+        cout << "=> LOI: Danh sach da day (toi da 200 tai khoan)!\n";
+        return;
+    }
+    if (k < 0 || k > n) {
+        cout << "=> LOI: Vi tri k = " << k << " khong hop le! (Cho phep tu 0 den " << n << ")\n";
+        return;
+    }
+
+    TaiKhoan tkMoi;
+    cout << "\n--- Nhap thong tin tai khoan can them ---\n";
+    while (true) {
+        tkMoi.nhap();
+        bool trung = false;
+        for (int i = 0; i < n; i++) {
+            if (ds[i].getSTK() == tkMoi.getSTK()) {
+                trung = true;
+                break;
+            }
+        }
+        if (trung) {
+            cout << "=> LOI: So tai khoan da ton tai! Vui long nhap lai.\n";
+        } else {
+            break;
+        }
+    }
+
+    for (int i = n; i > k; i--) {
+        ds[i] = ds[i - 1];
+    }
+    ds[k] = tkMoi;
+    n++;
+    cout << "=> Da them tai khoan thanh cong vao vi tri " << k << "!\n";
+}
+void QuanLyTaiKhoan::xoaTaiKhoan(int k) {
+    if (n == 0) {
+        cout << "=> Danh sach trong, khong the xoa!\n";
+        return;
+    }
+    if (k < 0 || k >= n) {
+        cout << "=> LOI: Vi tri k = " << k << " khong hop le! (Cho phep tu 0 den " << n - 1 << ")\n";
+        return;
+    }
+
+    for (int i = k; i < n - 1; i++) {
+        ds[i] = ds[i + 1];
+    }
+    n--;
+    cout << "=> Da xoa tai khoan tai vi tri " << k << " thanh cong!\n";
+}
