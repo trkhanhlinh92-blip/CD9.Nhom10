@@ -11,16 +11,18 @@ private:
 public:
     QuanLyTaiKhoan();
 
-    // Module Lê Kim Huế
+    int getSoLuong() const;
+
+    // Phan he I/O & Tim kiem 
     void nhapDanhSach();
     void xuatDanhSach() const;
-    int timKiem(string tk) const;
-    void thaoTacNapRut(int loai);
-
-    // Module Đoàn Quang Huy
-    void giamDan();
-    void boSung(int vitri);
-    void xoa(int vitri);
+    int timKiemBySTK(string stk) const;
+    void timKiemTheoTen() const;
+    void sapXepGiamDanSoDu();
+    void themTaiKhoan(int k);
+    void xoaTaiKhoan(int k);
+    void thucHienGiaoDich();
+    void inBangTinhLai() const;
 };
 
 #endif
